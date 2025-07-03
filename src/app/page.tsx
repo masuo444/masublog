@@ -1,6 +1,7 @@
 import HeroSection from '@/components/HeroSection'
 import AboutSection from '@/components/AboutSection'
 import ServicesSection from '@/components/ServicesSection'
+import ActivitySection from '@/components/ActivitySection'
 import RecentPosts from '@/components/RecentPosts'
 import ContactSection from '@/components/ContactSection'
 import { getRecentPosts } from '@/lib/queries'
@@ -22,6 +23,8 @@ export default async function Home() {
       <HeroSection />
       <AboutSection />
       <ServicesSection />
+      {/* @ts-expect-error Server Component */}
+      <ActivitySection />
       {/* @ts-expect-error Server Component */}
       <RecentPosts posts={recentPosts} />
       <ContactSection />

@@ -35,22 +35,7 @@ interface RecentPostsProps {
 }
 
 export default async function RecentPosts({ posts = [] }: RecentPostsProps) {
-  // アメリカ・スペイン活動記のカテゴリーカード（常に表示）
-  const americaSpainCategoryPost = {
-    _id: 'america-spain-category',
-    title: 'アメリカ・スペイン活動記🇺🇸🇪🇸',
-    slug: { current: 'category/america-spain-activity' }, // カテゴリーページへのリンク
-    excerpt: 'アメリカとスペインでの活動を記録したシリーズです。各話ごとに体験談や学びを詳しく紹介しています。',
-    featuredImage: {
-      asset: { url: '/placeholder-america-spain.jpg' },
-      alt: 'アメリカ・スペイン活動記'
-    },
-    categories: [{ title: 'シリーズ記事', slug: { current: 'series' } }],
-    publishedAt: '2025-07-03',
-    author: { name: 'FOMUS まっすー' }
-  }
-
-  // デモ用のダミーデータ
+  // 技術・ビジネス系の記事のみ表示（活動記は別セクションで表示）
   const dummyPosts = [
     {
       _id: '1',
@@ -77,13 +62,23 @@ export default async function RecentPosts({ posts = [] }: RecentPostsProps) {
       categories: [{ title: 'クリエイティブ', slug: { current: 'creativity' } }],
       publishedAt: '2024-06-28',
       author: { name: 'FOMUS まっすー' }
+    },
+    {
+      _id: '3',
+      title: 'AIと共存する未来のワークスタイル',
+      slug: { current: 'ai-future-work' },
+      excerpt: 'AIの発展により変化する働き方と、私たちが準備すべきスキルについて考察します。',
+      featuredImage: {
+        asset: { url: '/blog-3.jpg' },
+        alt: 'AI技術'
+      },
+      categories: [{ title: 'テクノロジー', slug: { current: 'technology' } }],
+      publishedAt: '2024-06-25',
+      author: { name: 'FOMUS まっすー' }
     }
   ]
 
-  // アメリカ・スペイン活動記を先頭に追加
-  const allPosts = [americaSpainCategoryPost, ...dummyPosts]
-
-  const displayPosts = posts.length > 0 ? posts : allPosts
+  const displayPosts = posts.length > 0 ? posts : dummyPosts
 
   return (
     <section className="py-20 bg-gray-50">
@@ -104,18 +99,8 @@ export default async function RecentPosts({ posts = [] }: RecentPostsProps) {
               className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
             >
               <Link href={`/blog/${post.slug.current}`}>
-                <div className="relative h-48">
-                  {post._id === 'america-spain-category' ? (
-                    <div className="flex items-center justify-center h-full bg-gradient-to-br from-blue-500 via-purple-500 to-orange-500">
-                      <div className="text-center text-white">
-                        <div className="text-4xl mb-2">🌍</div>
-                        <div className="flex gap-2 text-3xl">
-                          <span>🇺🇸</span>
-                          <span>🇪🇸</span>
-                        </div>
-                      </div>
-                    </div>
-                  ) : post.featuredImage ? (
+                <div className="relative h-48 bg-gray-200">
+                  {post.featuredImage ? (
                     <Image
                       src={post.featuredImage.asset.url}
                       alt={post.featuredImage.alt || post.title}
