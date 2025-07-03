@@ -12,6 +12,7 @@ export default async function ActivitySection() {
   try {
     episodes = await getAmericaSpainActivityPosts()
     console.log('Notion活動記エピソード取得成功:', episodes.length, '件')
+    console.log('エピソード詳細:', episodes.slice(0, 3).map(e => ({ title: e.title, slug: e.slug })))
   } catch (error) {
     console.error('Notion活動記エピソード取得エラー:', error)
   }

@@ -6,8 +6,8 @@ import RecentPosts from '@/components/RecentPosts'
 import ContactSection from '@/components/ContactSection'
 import { getRecentPosts } from '@/lib/queries'
 
-// ISR設定: ホームページは120秒間キャッシュ
-export const revalidate = 120
+// ISR設定: ホームページは30秒間キャッシュ（デバッグ用）
+export const revalidate = 30
 
 export default async function Home() {
   let recentPosts = []
