@@ -51,10 +51,10 @@ export default function AboutSection() {
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-display font-medium text-gray-900 mb-6 tracking-tight">
             About FOMUS
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-serif font-light leading-relaxed tracking-wide">
             日本の伝統文化と現代テクノロジーを融合させ、
             世界に向けて新しい価値を創造しています。
           </p>
@@ -81,10 +81,10 @@ export default function AboutSection() {
 
         <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl p-8 md:p-12 mb-16">
           <div className="text-center mb-12">
-            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+            <h3 className="text-3xl md:text-4xl font-display font-medium text-gray-900 mb-4 tracking-tight">
               FOMUSコレクション
             </h3>
-            <p className="text-lg text-gray-700">
+            <p className="text-xl text-gray-700 font-serif font-light tracking-wide">
               伝統×革新のブランド体験
             </p>
           </div>

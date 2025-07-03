@@ -8,34 +8,36 @@ export default function HeroSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="order-2 lg:order-1">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              <span className="text-orange-600">まっすー</span>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-medium text-gray-900 mb-6 tracking-tight">
+              <span className="text-orange-600 font-display">まっすー</span>
               <br />
-              <span className="text-2xl md:text-3xl lg:text-4xl font-light text-gray-700">
+              <span className="text-3xl md:text-4xl lg:text-5xl font-serif font-extralight text-gray-600 tracking-wide">
                 FOMUS代表
               </span>
             </h1>
-            <p className="text-lg text-gray-600 mb-4 font-light">
+            <p className="text-xl text-gray-500 mb-4 font-serif font-light tracking-wide">
               写真家・アーティスト・AI講師・プロデューサー
             </p>
-            <p className="text-xl text-gray-700 mb-8 leading-relaxed font-light">
+            <p className="text-xl md:text-2xl text-gray-700 mb-8 leading-relaxed font-serif font-light tracking-wide">
               世界を旅して、価値を共創する。
               <br />
-              日本の伝統文化と現代テクノロジーを融合させ、
-              アイルランド・ドバイ・日本を拠点に国際的な活動を展開しています。
-              写真・AI・枡ブランディングを通じて、あなたの価値を最大限に引き出します。
+              <span className="text-lg text-gray-600">
+                日本の伝統文化と現代テクノロジーを融合させ、
+                アイルランド・ドバイ・日本を拠点に国際的な活動を展開しています。
+                写真・AI・枡ブランディングを通じて、あなたの価値を最大限に引き出します。
+              </span>
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="#contact"
-                className="inline-flex items-center justify-center px-8 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition-colors"
+                className="inline-flex items-center justify-center px-8 py-4 bg-orange-600 text-white font-sans font-medium rounded-lg hover:bg-orange-700 transition-all duration-300 shadow-lg hover:shadow-xl tracking-wide"
               >
                 お問い合わせ
                 <ArrowRight className="ml-2" size={20} />
               </Link>
               <Link
                 href="#services"
-                className="inline-flex items-center justify-center px-8 py-3 border-2 border-orange-600 text-orange-600 font-semibold rounded-lg hover:bg-orange-600 hover:text-white transition-colors"
+                className="inline-flex items-center justify-center px-8 py-4 border-2 border-orange-600 text-orange-600 font-sans font-medium rounded-lg hover:bg-orange-600 hover:text-white transition-all duration-300 tracking-wide"
               >
                 サービス詳細
               </Link>
