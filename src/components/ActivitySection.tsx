@@ -6,66 +6,44 @@ import { ja } from 'date-fns/locale'
 import { getAmericaSpainActivityPosts, NotionPost } from '@/lib/notion'
 
 export default async function ActivitySection() {
-  // アメリカ・スペイン活動記のエピソード（確実に表示されるようにダミーデータを基本とする）
-  const episodes: NotionPost[] = [
-    {
-      id: 'america-spain-1',
-      _id: 'america-spain-1',
-      title: 'アメリカ・スペイン活動記 第1話：出発への準備',
-      slug: 'america-spain-episode-1',
-      excerpt: 'いよいよアメリカとスペインでの活動が始まります。この第1話では、出発に向けた準備期間について詳しくお話しします。ビザ申請から現地での生活準備まで、様々な準備過程を記録しました。',
-      content: '<p>いよいよアメリカとスペインでの活動が始まります。この第1話では、出発に向けた準備について詳しくお話しします。</p>',
-      categories: [{ title: 'アメリカ・スペイン活動記', slug: { current: 'america-spain-activity' } }],
-      tags: [
-        { title: '第1話', slug: { current: 'episode-1' } },
-        { title: '準備', slug: { current: 'preparation' } }
-      ],
-      publishedAt: '2025-07-01',
-      author: { name: 'FOMUS まっすー' }
-    },
-    {
-      id: 'america-spain-2',
-      _id: 'america-spain-2',
-      title: 'アメリカ・スペイン活動記 第2話：アメリカ到着',
-      slug: 'america-spain-episode-2',
-      excerpt: 'ついにアメリカに到着しました！最初の数日間の体験と感想を記録しました。空港での手続きから、初めて見るアメリカの街並み、そして最初の文化的な驚きまで詳しく紹介します。',
-      content: '<p>アメリカに到着して最初の数日間。新しい環境での体験について詳しくお話しします。</p>',
-      categories: [{ title: 'アメリカ・スペイン活動記', slug: { current: 'america-spain-activity' } }],
-      tags: [
-        { title: '第2話', slug: { current: 'episode-2' } },
-        { title: 'アメリカ', slug: { current: 'america' } }
-      ],
-      publishedAt: '2025-07-02',
-      author: { name: 'FOMUS まっすー' }
-    },
-    {
-      id: 'america-spain-3',
-      _id: 'america-spain-3',
-      title: 'アメリカ・スペイン活動記 第3話：文化の違いを実感',
-      slug: 'america-spain-episode-3',
-      excerpt: 'アメリカでの生活を通じて感じた文化の違いについて詳しく記録します。言語の壁から始まり、日常生活での様々な発見、そして現地の人々との交流まで具体的な体験談をお話しします。',
-      content: '<p>アメリカでの生活を通じて感じた文化の違いについて、具体的な体験談を交えてお話しします。</p>',
-      categories: [{ title: 'アメリカ・スペイン活動記', slug: { current: 'america-spain-activity' } }],
-      tags: [
-        { title: '第3話', slug: { current: 'episode-3' } },
-        { title: '文化', slug: { current: 'culture' } }
-      ],
-      publishedAt: '2025-07-03',
-      author: { name: 'FOMUS まっすー' }
-    }
-  ]
-
-  // Notionからのデータ取得も試行（成功すれば上書き）
+  // Notionから活動記のエピソードを取得
+  let episodes: NotionPost[] = []
+  
   try {
-    const notionEpisodes = await getAmericaSpainActivityPosts()
-    if (notionEpisodes.length > 0) {
-      // Notionデータが取得できた場合は最新3話を使用
-      episodes.splice(0, 3, ...notionEpisodes.slice(0, 3))
-    }
+    episodes = await getAmericaSpainActivityPosts()
+    console.log('Notion活動記エピソード取得成功:', episodes.length, '件')
   } catch (error) {
     console.error('Notion活動記エピソード取得エラー:', error)
-    // エラーが発生してもダミーデータで継続
   }
+
+  // エピソードが取得できない場合は何も表示しない
+  if (episodes.length === 0) {
+    return (
+      <section className="py-20 bg-gradient-to-br from-blue-50 via-purple-50 to-orange-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="flex justify-center items-center gap-3 mb-4">
+              <div className="text-4xl">🌍</div>
+              <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-orange-600 bg-clip-text text-transparent">
+                活動記
+              </h2>
+              <div className="flex gap-2 text-3xl">
+                <span>🇺🇸</span>
+                <span>🇪🇸</span>
+              </div>
+            </div>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              アメリカとスペインでの活動記を準備中です。<br />
+              もうしばらくお待ちください。
+            </p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // 最新3話を表示
+  const displayEpisodes = episodes.slice(0, 3)
 
   return (
     <section className="py-20 bg-gradient-to-br from-blue-50 via-purple-50 to-orange-50">
@@ -99,9 +77,9 @@ export default async function ActivitySection() {
         </div>
 
         {/* エピソード一覧 */}
-        {episodes.length > 0 ? (
+        {displayEpisodes.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {episodes.map((episode, index) => (
+            {displayEpisodes.map((episode, index) => (
               <article
                 key={episode.id}
                 className="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100"

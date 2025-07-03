@@ -38,61 +38,14 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   let posts = []
   let categories = []
 
-  // アメリカ・スペイン活動記の場合は専用のダミーデータを準備
+  // アメリカ・スペイン活動記の場合はNotionから取得
   if (categorySlug === 'america-spain-activity') {
-    posts = [
-      {
-        _id: 'america-spain-1',
-        title: 'アメリカ・スペイン活動記 第1話：出発への準備',
-        slug: { current: 'america-spain-episode-1' },
-        excerpt: 'いよいよアメリカとスペインでの活動が始まります。この第1話では、出発に向けた準備期間について詳しくお話しします。ビザ申請から現地での生活準備まで、様々な準備過程を記録しました。',
-        featuredImage: undefined,
-        categories: [{ title: 'アメリカ・スペイン活動記', slug: { current: 'america-spain-activity' } }],
-        tags: [
-          { title: '第1話', slug: { current: 'episode-1' } },
-          { title: '準備', slug: { current: 'preparation' } }
-        ],
-        publishedAt: '2025-07-01',
-        author: { name: 'FOMUS まっすー' }
-      },
-      {
-        _id: 'america-spain-2',
-        title: 'アメリカ・スペイン活動記 第2話：アメリカ到着',
-        slug: { current: 'america-spain-episode-2' },
-        excerpt: 'ついにアメリカに到着しました！最初の数日間の体験と感想を記録しました。空港での手続きから、初めて見るアメリカの街並み、そして最初の文化的な驚きまで詳しく紹介します。',
-        featuredImage: undefined,
-        categories: [{ title: 'アメリカ・スペイン活動記', slug: { current: 'america-spain-activity' } }],
-        tags: [
-          { title: '第2話', slug: { current: 'episode-2' } },
-          { title: 'アメリカ', slug: { current: 'america' } }
-        ],
-        publishedAt: '2025-07-02',
-        author: { name: 'FOMUS まっすー' }
-      },
-      {
-        _id: 'america-spain-3',
-        title: 'アメリカ・スペイン活動記 第3話：文化の違いを実感',
-        slug: { current: 'america-spain-episode-3' },
-        excerpt: 'アメリカでの生活を通じて感じた文化の違いについて詳しく記録します。言語の壁から始まり、日常生活での様々な発見、そして現地の人々との交流まで具体的な体験談をお話しします。',
-        featuredImage: undefined,
-        categories: [{ title: 'アメリカ・スペイン活動記', slug: { current: 'america-spain-activity' } }],
-        tags: [
-          { title: '第3話', slug: { current: 'episode-3' } },
-          { title: '文化', slug: { current: 'culture' } }
-        ],
-        publishedAt: '2025-07-03',
-        author: { name: 'FOMUS まっすー' }
-      }
-    ]
-    
-    // Notionからのデータ取得も試行
     try {
-      const notionPosts = await getAmericaSpainActivityPosts()
-      if (notionPosts.length > 0) {
-        posts = notionPosts // Notionデータが取得できた場合は置き換え
-      }
+      posts = await getAmericaSpainActivityPosts()
+      console.log('Notion活動記データ取得成功:', posts.length, '件')
     } catch (error) {
       console.log('Notion活動記データ取得エラー:', error)
+      posts = [] // エラーの場合は空配列
     }
   } else {
     try {
