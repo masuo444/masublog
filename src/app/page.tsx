@@ -22,6 +22,7 @@ export default async function Home() {
       <HeroSection />
       <AboutSection />
       <ServicesSection />
+      {/* @ts-expect-error Server Component */}
       <RecentPosts posts={recentPosts} />
       <ContactSection />
     </div>

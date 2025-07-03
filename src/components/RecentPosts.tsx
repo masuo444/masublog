@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, Calendar, User } from 'lucide-react'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
+import { getSpecificNotionPost } from '@/lib/notion'
 
 interface Post {
   _id: string
@@ -33,7 +34,30 @@ interface RecentPostsProps {
   posts: Post[]
 }
 
-export default function RecentPosts({ posts = [] }: RecentPostsProps) {
+export default async function RecentPosts({ posts = [] }: RecentPostsProps) {
+  // Notionの記事を取得
+  let notionPost = null
+  try {
+    notionPost = await getSpecificNotionPost()
+  } catch (error) {
+    console.log('Notion記事の取得に失敗しました:', error)
+  }
+
+  // Notion記事をPost形式に変換
+  const convertedNotionPost = notionPost ? {
+    _id: notionPost.id,
+    title: notionPost.title,
+    slug: { current: 'america-spain-activity' },
+    excerpt: notionPost.content?.substring(0, 160) + '...' || 'アメリカとスペインでの活動について',
+    featuredImage: notionPost.coverImage ? {
+      asset: { url: notionPost.coverImage },
+      alt: notionPost.title
+    } : undefined,
+    categories: [{ title: '活動記録', slug: { current: 'activity' } }],
+    publishedAt: notionPost.publishedAt || '2025-07-03',
+    author: { name: 'FOMUS まっすー' }
+  } : null
+
   // デモ用のダミーデータ
   const dummyPosts = [
     {
@@ -61,23 +85,17 @@ export default function RecentPosts({ posts = [] }: RecentPostsProps) {
       categories: [{ title: 'クリエイティブ', slug: { current: 'creativity' } }],
       publishedAt: '2024-06-28',
       author: { name: 'FOMUS まっすー' }
-    },
-    {
-      _id: '3',
-      title: 'AIと共存する未来のワークスタイル',
-      slug: { current: 'ai-future-work' },
-      excerpt: 'AIの発展により変化する働き方と、私たちが準備すべきスキルについて考察します。',
-      featuredImage: {
-        asset: { url: '/blog-3.jpg' },
-        alt: 'AI技術'
-      },
-      categories: [{ title: 'テクノロジー', slug: { current: 'technology' } }],
-      publishedAt: '2024-06-25',
-      author: { name: 'FOMUS まっすー' }
     }
   ]
 
-  const displayPosts = posts.length > 0 ? posts : dummyPosts
+  // Notionの記事を先頭に追加
+  const allPosts = []
+  if (convertedNotionPost) {
+    allPosts.push(convertedNotionPost)
+  }
+  allPosts.push(...dummyPosts)
+
+  const displayPosts = posts.length > 0 ? posts : allPosts
 
   return (
     <section className="py-20 bg-gray-50">
