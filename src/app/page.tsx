@@ -1,5 +1,6 @@
 import HeroSection from '@/components/HeroSection'
 import AboutSection from '@/components/AboutSection'
+import ServicesSection from '@/components/ServicesSection'
 import RecentPosts from '@/components/RecentPosts'
 import ContactSection from '@/components/ContactSection'
 import { getRecentPosts } from '@/lib/queries'
@@ -17,6 +18,7 @@ export default async function Home() {
     <div>
       <HeroSection />
       <AboutSection />
+      <ServicesSection />
       <RecentPosts posts={recentPosts} />
       <ContactSection />
     </div>

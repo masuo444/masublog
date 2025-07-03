@@ -13,20 +13,29 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 export const metadata: Metadata = {
-  title: "FOMUS まっすー | 公式サイト",
-  description: "クリエイター・起業家 FOMUS まっすーの公式サイトです。最新の活動情報やブログを発信しています。",
-  keywords: ["FOMUS", "まっすー", "クリエイター", "起業家", "ブログ"],
-  authors: [{ name: "FOMUS まっすー" }],
+  title: "まっすー | FOMUS代表 - 写真家・アーティスト・AI講師・プロデューサー",
+  description: "まっすー（FOMUS代表）の公式サイト。写真家・アーティスト・AI講師として、日本の伝統文化と現代テクノロジーを融合させた創作活動を展開。アイルランド・ドバイ・日本を拠点に国際的に活動中。",
+  keywords: ["まっすー", "FOMUS", "写真家", "アーティスト", "AI講師", "プロデューサー", "枡", "日本文化", "アイルランド", "ドバイ"],
+  authors: [{ name: "まっすー" }],
   openGraph: {
-    title: "FOMUS まっすー | 公式サイト",
-    description: "クリエイター・起業家 FOMUS まっすーの公式サイトです。",
+    title: "まっすー | FOMUS代表 - 写真家・アーティスト・AI講師・プロデューサー",
+    description: "日本の伝統文化と現代テクノロジーを融合させた創作活動を展開。写真・AI・枡ブランディングを通じて価値創造をサポート。",
     type: "website",
     locale: "ja_JP",
+    url: "https://masublog.vercel.app",
+    images: [
+      {
+        url: "/profile.jpg",
+        width: 1200,
+        height: 630,
+        alt: "まっすー プロフィール写真",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "FOMUS まっすー | 公式サイト",
-    description: "クリエイター・起業家 FOMUS まっすーの公式サイトです。",
+    title: "まっすー | FOMUS代表",
+    description: "日本の伝統文化と現代テクノロジーを融合させた創作活動を展開。",
   },
 };
 
