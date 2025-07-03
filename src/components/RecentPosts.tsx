@@ -129,14 +129,14 @@ export default function RecentPosts({ posts = [] }: RecentPostsProps) {
                     <Link
                       key={category.slug.current}
                       href={`/blog/category/${category.slug.current}`}
-                      className="inline-block px-3 py-1 bg-blue-100 text-blue-600 text-xs font-medium rounded-full hover:bg-blue-200 transition-colors"
+                      className="inline-block px-3 py-1 bg-orange-100 text-orange-600 text-xs font-medium rounded-full hover:bg-orange-200 transition-colors"
                     >
                       {category.title}
                     </Link>
                   ))}
                 </div>
 
-                <h3 className="text-xl font-semibold text-gray-900 mb-3 hover:text-blue-600 transition-colors">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 hover:text-orange-600 transition-colors">
                   <Link href={`/blog/${post.slug.current}`}>
                     {post.title}
                   </Link>
@@ -148,7 +148,7 @@ export default function RecentPosts({ posts = [] }: RecentPostsProps) {
                 
                 <Link
                   href={`/blog/${post.slug.current}`}
-                  className="inline-flex items-center text-blue-600 font-medium hover:text-blue-700 transition-colors"
+                  className="inline-flex items-center text-orange-600 font-medium hover:text-orange-700 transition-colors"
                 >
                   続きを読む
                   <ArrowRight size={16} className="ml-1" />
@@ -161,7 +161,7 @@ export default function RecentPosts({ posts = [] }: RecentPostsProps) {
         <div className="text-center">
           <Link
             href="/blog"
-            className="inline-flex items-center px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center px-8 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition-colors"
           >
             すべての記事を見る
             <ArrowRight className="ml-2" size={20} />

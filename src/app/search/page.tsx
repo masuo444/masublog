@@ -6,7 +6,7 @@ import { Calendar, User, ArrowRight, Search } from 'lucide-react'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
 import { searchPosts } from '@/lib/queries'
-import { Post } from '@/types/blog'
+import { NotionPost } from '@/lib/notion'
 
 export const metadata: Metadata = {
   title: '検索結果 | FOMUS まっすー',
@@ -20,7 +20,7 @@ interface SearchPageProps {
 }
 
 async function SearchResults({ query }: { query: string }) {
-  let posts: Post[] = []
+  let posts: NotionPost[] = []
 
   try {
     posts = await searchPosts(query)
@@ -29,11 +29,12 @@ async function SearchResults({ query }: { query: string }) {
   }
 
   // ダミーデータ
-  const dummyPosts = [
+  const dummyPosts: NotionPost[] = [
     {
-      _id: '1',
+      id: '1',
       title: 'スタートアップで学んだ失敗からの教訓',
-      slug: { current: 'startup-lessons' },
+      slug: 'startup-lessons',
+      content: '',
       excerpt: '起業の過程で経験した失敗と、そこから得た貴重な学びについて詳しく解説します。',
       featuredImage: {
         asset: { url: '/blog-1.jpg' },
@@ -48,9 +49,10 @@ async function SearchResults({ query }: { query: string }) {
       author: { name: 'FOMUS まっすー' }
     },
     {
-      _id: '2',
+      id: '2',
       title: 'クリエイティブワークを効率化するツール10選',
-      slug: { current: 'creative-tools' },
+      slug: 'creative-tools',
+      content: '',
       excerpt: 'デザインや動画制作の生産性を向上させる、おすすめツールを厳選してご紹介。',
       featuredImage: {
         asset: { url: '/blog-2.jpg' },
@@ -65,9 +67,10 @@ async function SearchResults({ query }: { query: string }) {
       author: { name: 'FOMUS まっすー' }
     },
     {
-      _id: '3',
+      id: '3',
       title: 'AIと共存する未来のワークスタイル',
-      slug: { current: 'ai-future-work' },
+      slug: 'ai-future-work',
+      content: '',
       excerpt: 'AIの発展により変化する働き方と、私たちが準備すべきスキルについて考察します。',
       featuredImage: {
         asset: { url: '/blog-3.jpg' },
@@ -120,14 +123,14 @@ async function SearchResults({ query }: { query: string }) {
         </div>
       ) : (
         <div className="space-y-6">
-          {posts.map((post: Post) => (
+          {posts.map((post: NotionPost) => (
             <article
-              key={post._id}
+              key={post.id}
               className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
             >
               <div className="md:flex">
                 <div className="md:w-1/3">
-                  <Link href={`/blog/${post.slug.current}`}>
+                  <Link href={`/blog/${post.slug}`}>
                     <div className="relative h-48 md:h-full bg-gray-200">
                       {post.featuredImage ? (
                         <Image
@@ -160,15 +163,15 @@ async function SearchResults({ query }: { query: string }) {
                       <Link
                         key={category.slug.current}
                         href={`/blog/category/${category.slug.current}`}
-                        className="inline-block px-3 py-1 bg-blue-100 text-blue-600 text-xs font-medium rounded-full hover:bg-blue-200 transition-colors"
+                        className="inline-block px-3 py-1 bg-orange-100 text-orange-600 text-xs font-medium rounded-full hover:bg-orange-200 transition-colors"
                       >
                         {category.title}
                       </Link>
                     ))}
                   </div>
 
-                  <h2 className="text-xl font-semibold text-gray-900 mb-3 hover:text-blue-600 transition-colors">
-                    <Link href={`/blog/${post.slug.current}`}>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-3 hover:text-orange-600 transition-colors">
+                    <Link href={`/blog/${post.slug}`}>
                       {post.title}
                     </Link>
                   </h2>
@@ -178,8 +181,8 @@ async function SearchResults({ query }: { query: string }) {
                   </p>
                   
                   <Link
-                    href={`/blog/${post.slug.current}`}
-                    className="inline-flex items-center text-blue-600 font-medium hover:text-blue-700 transition-colors"
+                    href={`/blog/${post.slug}`}
+                    className="inline-flex items-center text-orange-600 font-medium hover:text-orange-700 transition-colors"
                   >
                     続きを読む
                     <ArrowRight size={16} className="ml-1" />

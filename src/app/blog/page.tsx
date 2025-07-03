@@ -10,7 +10,11 @@ import { Post, Category } from '@/types/blog'
 export const metadata: Metadata = {
   title: 'ブログ | FOMUS まっすー',
   description: 'ビジネス、テクノロジー、ライフスタイルについて発信するブログです。',
+  metadataBase: new URL(process.env.NODE_ENV === 'production' ? 'https://blog.fomus.jp' : 'http://localhost:3000'),
 }
+
+// ISR設定: 60秒間キャッシュし、バックグラウンドで更新
+export const revalidate = 60
 
 export default async function BlogPage() {
   let posts = []

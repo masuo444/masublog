@@ -8,6 +8,9 @@ import { ja } from 'date-fns/locale'
 import { getPostBySlug } from '@/lib/queries'
 import { BlogPostJsonLd } from '@/components/JsonLd'
 
+// ISR設定: 30秒間キャッシュし、バックグラウンドで更新
+export const revalidate = 30
+
 interface BlogPostPageProps {
   params: Promise<{
     slug: string

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@notionhq/client": "^4.0.0",
     "@portabletext/react": "^3.2.1",
     "@sanity/client": "^7.6.0",
     "@sanity/image-url": "^1.1.0",

@@ -2,7 +2,14 @@ import { MetadataRoute } from 'next'
 import { getAllPosts, getAllCategories, getAllTags } from '@/lib/queries'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://masublog.vercel.app'
+  // 動的ベースURL決定（本番/開発環境対応）
+  const baseUrl = process.env.NODE_ENV === 'production' 
+    ? 'https://blog.fomus.jp'
+    : process.env.VERCEL_URL 
+    ? `https://${process.env.VERCEL_URL}`
+    : 'http://localhost:3000'
+
+  console.log(`🗺️ Generating sitemap for: ${baseUrl}`)
   
   let posts = []
   let categories = []
@@ -92,5 +99,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }))
 
+  console.log(`📝 Sitemap generated: ${staticPages.length} static + ${postPages.length} posts + ${categoryPages.length} categories + ${tagPages.length} tags`)
+
   return [...staticPages, ...postPages, ...categoryPages, ...tagPages]
 }
+
+// ISR設定: サイトマップを1時間ごとに更新
+export const revalidate = 3600

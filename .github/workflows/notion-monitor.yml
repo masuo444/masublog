@@ -1,0 +1,101 @@
+name: 📝 Notion Monitor & Auto-Update
+
+on:
+  # 定期的にNotionの変更をチェック（15分ごと）
+  schedule:
+    - cron: '*/15 * * * *'
+  # 手動トリガー
+  workflow_dispatch:
+  # 外部からのWebhookトリガー
+  repository_dispatch:
+    types: [notion-content-changed]
+
+jobs:
+  notion-monitor:
+    name: 🔍 Monitor Notion Changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check Notion Content Changes
+        id: notion-check
+        run: |
+          # Notion APIで最新の更新時刻を取得
+          cat > check-notion.js << 'EOF'
+          const { Client } = require('@notionhq/client');
+          
+          const notion = new Client({
+            auth: process.env.NOTION_TOKEN,
+          });
+          
+          async function checkLastUpdated() {
+            try {
+              // 特定ページの最終更新時刻をチェック
+              const page = await notion.pages.retrieve({
+                page_id: 'bf974aff-d18f-44d7-97e9-b1838eb2222a'
+              });
+              
+              const lastEdited = page.last_edited_time;
+              const now = new Date();
+              const lastEditTime = new Date(lastEdited);
+              const diffMinutes = (now - lastEditTime) / (1000 * 60);
+              
+              console.log(`Last edited: ${lastEdited}`);
+              console.log(`Minutes since last edit: ${diffMinutes}`);
+              
+              // 15分以内に更新があった場合
+              if (diffMinutes <= 15) {
+                console.log('CONTENT_CHANGED=true');
+                console.log('::set-output name=changed::true');
+              } else {
+                console.log('CONTENT_CHANGED=false');
+                console.log('::set-output name=changed::false');
+              }
+            } catch (error) {
+              console.error('Error checking Notion:', error);
+              console.log('::set-output name=changed::false');
+            }
+          }
+          
+          checkLastUpdated();
+          EOF
+          
+          node check-notion.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+
+      - name: Trigger Site Update
+        if: steps.notion-check.outputs.changed == 'true'
+        run: |
+          echo "🔄 Notion content changed! Triggering site update..."
+          
+          # サイトの自動更新をトリガー
+          curl -X POST "${{ secrets.SITE_URL }}/api/refresh-notion" \
+            -H "Content-Type: application/json" \
+            -d '{"secret": "${{ secrets.REVALIDATE_SECRET }}"}'
+          
+          # GitHub Actionsでデプロイも再トリガー
+          curl -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/${{ github.repository }}/dispatches \
+            -d '{"event_type":"notion-update","client_payload":{"updated_at":"${{ github.event.head_commit.timestamp }}"}}'
+
+      - name: Log Status
+        run: |
+          if [ "${{ steps.notion-check.outputs.changed }}" == "true" ]; then
+            echo "✅ Site updated due to Notion changes"
+          else
+            echo "ℹ️ No Notion changes detected"
+          fi

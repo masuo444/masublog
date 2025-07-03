@@ -1,0 +1,103 @@
+name: 🚀 Deploy to Vercel & Auto-update
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  # Notion Webhookからのトリガー用
+  repository_dispatch:
+    types: [notion-update]
+  # 定期実行（1時間ごとにNotion変更チェック）
+  schedule:
+    - cron: '0 * * * *'
+
+jobs:
+  # 品質チェック
+  quality-check:
+    name: 🔍 Quality Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: TypeScript Check
+        run: npx tsc --noEmit
+
+      - name: Build Test
+        run: npm run build
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+          NOTION_WEBHOOK_SECRET: ${{ secrets.NOTION_WEBHOOK_SECRET }}
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+
+  # Vercelデプロイ
+  deploy:
+    name: 🚀 Deploy to Vercel
+    runs-on: ubuntu-latest
+    needs: quality-check
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project Artifacts
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+  # Notion同期確認
+  notion-sync:
+    name: 🔄 Notion Sync Check
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: Trigger Notion Refresh
+        run: |
+          curl -X POST "${{ secrets.SITE_URL }}/api/refresh-notion" \
+            -H "Content-Type: application/json" \
+            -d '{"secret": "${{ secrets.REVALIDATE_SECRET }}"}'
+
+      - name: Health Check
+        run: |
+          curl -f "${{ secrets.SITE_URL }}" || exit 1
+          curl -f "${{ secrets.SITE_URL }}/blog" || exit 1
+
+  # 成功通知（オプション）
+  notify:
+    name: 📢 Success Notification
+    runs-on: ubuntu-latest
+    needs: [deploy, notion-sync]
+    if: success()
+    steps:
+      - name: Success Message
+        run: |
+          echo "✅ Deploy completed successfully!"
+          echo "🌐 Site URL: ${{ secrets.SITE_URL }}"
+          echo "📝 Notion integration active"
+          echo "⚡ Auto-sync enabled"
