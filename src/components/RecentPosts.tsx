@@ -35,31 +35,20 @@ interface RecentPostsProps {
 }
 
 export default async function RecentPosts({ posts = [] }: RecentPostsProps) {
-  // Notionの記事を取得
-  let notionPost = null
-  try {
-    notionPost = await getSpecificNotionPost()
-  } catch (error) {
-    console.log('Notion記事の取得に失敗しました:', error)
-  }
-
-  // Notion記事をPost形式に変換（カテゴリーページへのリンクとして表示）
-  const convertedNotionPost = notionPost ? {
+  // アメリカ・スペイン活動記のカテゴリーカード（常に表示）
+  const americaSpainCategoryPost = {
     _id: 'america-spain-category',
     title: 'アメリカ・スペイン活動記🇺🇸🇪🇸',
     slug: { current: 'category/america-spain-activity' }, // カテゴリーページへのリンク
     excerpt: 'アメリカとスペインでの活動を記録したシリーズです。各話ごとに体験談や学びを詳しく紹介しています。',
-    featuredImage: notionPost.coverImage ? {
-      asset: { url: notionPost.coverImage },
-      alt: notionPost.title
-    } : {
+    featuredImage: {
       asset: { url: '/placeholder-america-spain.jpg' },
       alt: 'アメリカ・スペイン活動記'
     },
     categories: [{ title: 'シリーズ記事', slug: { current: 'series' } }],
-    publishedAt: notionPost.publishedAt || '2025-07-03',
+    publishedAt: '2025-07-03',
     author: { name: 'FOMUS まっすー' }
-  } : null
+  }
 
   // デモ用のダミーデータ
   const dummyPosts = [
@@ -91,12 +80,8 @@ export default async function RecentPosts({ posts = [] }: RecentPostsProps) {
     }
   ]
 
-  // Notionの記事を先頭に追加
-  const allPosts = []
-  if (convertedNotionPost) {
-    allPosts.push(convertedNotionPost)
-  }
-  allPosts.push(...dummyPosts)
+  // アメリカ・スペイン活動記を先頭に追加
+  const allPosts = [americaSpainCategoryPost, ...dummyPosts]
 
   const displayPosts = posts.length > 0 ? posts : allPosts
 
@@ -119,8 +104,18 @@ export default async function RecentPosts({ posts = [] }: RecentPostsProps) {
               className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
             >
               <Link href={`/blog/${post.slug.current}`}>
-                <div className="relative h-48 bg-gray-200">
-                  {post.featuredImage ? (
+                <div className="relative h-48">
+                  {post._id === 'america-spain-category' ? (
+                    <div className="flex items-center justify-center h-full bg-gradient-to-br from-blue-500 via-purple-500 to-orange-500">
+                      <div className="text-center text-white">
+                        <div className="text-4xl mb-2">🌍</div>
+                        <div className="flex gap-2 text-3xl">
+                          <span>🇺🇸</span>
+                          <span>🇪🇸</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : post.featuredImage ? (
                     <Image
                       src={post.featuredImage.asset.url}
                       alt={post.featuredImage.alt || post.title}

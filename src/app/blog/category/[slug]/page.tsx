@@ -129,12 +129,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                               className="object-cover group-hover:scale-105 transition-transform duration-300"
                             />
                           ) : (
-                            <div className="flex items-center justify-center h-full">
+                            <div className="flex items-center justify-center h-full bg-gradient-to-br from-blue-100 via-purple-100 to-orange-100">
                               <div className="text-center">
-                                <div className="text-4xl mb-2">
+                                <div className="text-6xl mb-3">
                                   {index % 3 === 0 ? '🇺🇸' : index % 3 === 1 ? '🇪🇸' : '✈️'}
                                 </div>
-                                <span className="text-2xl font-bold text-gray-600">
+                                <span className="text-3xl font-bold text-gray-700">
                                   第{index + 1}話
                                 </span>
                               </div>
