@@ -523,11 +523,11 @@ export async function getChildPages(parentPageId: string): Promise<NotionPost[]>
     })
 
     const childPageBlocks = response.results.filter(
-      (block: any) => block.type === 'child_page'
+      (block): block is BlockObjectResponse => 'type' in block && (block as BlockObjectResponse).type === 'child_page'
     )
 
     const childPages = await Promise.all(
-      childPageBlocks.map(async (block: any) => {
+      childPageBlocks.map(async (block) => {
         const pageData = await notion.pages.retrieve({ page_id: block.id })
         return await formatNotionPageToPost(pageData as PageObjectResponse)
       })
