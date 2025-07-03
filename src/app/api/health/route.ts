@@ -49,6 +49,12 @@ export async function GET(request: NextRequest) {
     } catch (error) {
       healthData.services.notion = false
       healthData.errors.push(`Notion API Error: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      // @ts-expect-error - 動的プロパティ追加
+      healthData.notionDetails = {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        lastFetchTime: new Date().toISOString()
+      }
     }
 
     // キャッシュテスト
