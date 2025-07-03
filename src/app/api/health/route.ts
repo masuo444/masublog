@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAllNotionPosts, getSpecificNotionPost } from '@/lib/notion'
+import { getAllNotionPosts, getSpecificNotionPost, getAmericaSpainActivityPosts } from '@/lib/notion'
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
@@ -28,22 +28,23 @@ export async function GET(request: NextRequest) {
   try {
     // Notion接続テスト
     try {
-      const [allPosts, specificPost] = await Promise.all([
+      const [allPosts, specificPost, activityPosts] = await Promise.all([
         getAllNotionPosts(),
-        getSpecificNotionPost()
+        getSpecificNotionPost(),
+        getAmericaSpainActivityPosts()
       ])
       
       healthData.services.notion = true
-      healthData.services.database = allPosts.length > 0 || !!specificPost
+      healthData.services.database = allPosts.length > 0 || !!specificPost || activityPosts.length > 0
       
-      // 詳細情報（秘密キーがある場合のみ）
-      if (secret === process.env.REVALIDATE_SECRET) {
-        // @ts-expect-error - 動的プロパティ追加
-        healthData.notionDetails = {
-          postsCount: allPosts.length,
-          hasSpecificPost: !!specificPost,
-          lastFetchTime: new Date().toISOString()
-        }
+      // 詳細情報（常に表示）
+      // @ts-expect-error - 動的プロパティ追加
+      healthData.notionDetails = {
+        allPostsCount: allPosts.length,
+        hasSpecificPost: !!specificPost,
+        activityPostsCount: activityPosts.length,
+        activityTitles: activityPosts.slice(0, 5).map(p => p.title),
+        lastFetchTime: new Date().toISOString()
       }
     } catch (error) {
       healthData.services.notion = false
