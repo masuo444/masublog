@@ -6,7 +6,7 @@ import { Calendar, Clock, ArrowLeft, Share, Tag } from 'lucide-react'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
 import { getPostBySlug } from '@/lib/queries'
-import { getSpecificNotionPost, getNotionPageById } from '@/lib/notion'
+import { getSpecificNotionPost, getNotionPageById, getAmericaSpainActivityPosts } from '@/lib/notion'
 import { BlogPostJsonLd } from '@/components/JsonLd'
 
 // ISR設定: 30秒間キャッシュし、バックグラウンドで更新
@@ -66,6 +66,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     if (slug === 'america-spain-activity') {
       post = await getSpecificNotionPost()
       console.log('Notion記事を取得しました:', post?.title)
+    } else if (slug.startsWith('america-spain-episode-')) {
+      // アメリカ・スペイン活動記の各話を取得
+      const episodes = await getAmericaSpainActivityPosts()
+      post = episodes.find(episode => episode.slug === slug)
+      console.log('エピソード記事を取得しました:', post?.title)
     }
   } catch (error) {
     console.log('Notion記事の取得に失敗しました:', error)

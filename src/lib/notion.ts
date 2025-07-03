@@ -515,6 +515,77 @@ export async function getSpecificNotionPost(): Promise<NotionPost | null> {
   return await getNotionPageById(SPECIFIC_PAGE_ID)
 }
 
+// アメリカ・スペイン活動記のシリーズ記事を取得
+export async function getAmericaSpainActivityPosts(): Promise<NotionPost[]> {
+  try {
+    // Notionデータベースからアメリカ・スペイン活動記カテゴリーの記事を取得
+    const posts = await getNotionPostsByCategory('アメリカ・スペイン活動記')
+    
+    if (posts.length === 0) {
+      // ダミーデータを返す（開発用）
+      return [
+        {
+          id: 'america-spain-1',
+          _id: 'america-spain-1',
+          title: 'アメリカ・スペイン活動記 第1話：出発への準備',
+          slug: 'america-spain-episode-1',
+          excerpt: 'アメリカとスペインでの活動に向けた準備期間について詳しく記録します。',
+          content: '<p>いよいよアメリカとスペインでの活動が始まります。この第1話では、出発に向けた準備について詳しくお話しします。</p>',
+          categories: [{ title: 'アメリカ・スペイン活動記', slug: { current: 'america-spain-activity' } }],
+          tags: [
+            { title: '第1話', slug: { current: 'episode-1' } },
+            { title: '準備', slug: { current: 'preparation' } }
+          ],
+          publishedAt: '2025-07-01',
+          author: { name: 'FOMUS まっすー' }
+        },
+        {
+          id: 'america-spain-2',
+          _id: 'america-spain-2',
+          title: 'アメリカ・スペイン活動記 第2話：アメリカ到着',
+          slug: 'america-spain-episode-2',
+          excerpt: 'ついにアメリカに到着。最初の数日間の体験と感想を記録しました。',
+          content: '<p>アメリカに到着して最初の数日間。新しい環境での体験について詳しくお話しします。</p>',
+          categories: [{ title: 'アメリカ・スペイン活動記', slug: { current: 'america-spain-activity' } }],
+          tags: [
+            { title: '第2話', slug: { current: 'episode-2' } },
+            { title: 'アメリカ', slug: { current: 'america' } }
+          ],
+          publishedAt: '2025-07-02',
+          author: { name: 'FOMUS まっすー' }
+        },
+        {
+          id: 'america-spain-3',
+          _id: 'america-spain-3',
+          title: 'アメリカ・スペイン活動記 第3話：文化の違いを実感',
+          slug: 'america-spain-episode-3',
+          excerpt: 'アメリカでの生活を通じて感じた文化の違いについて詳しく記録します。',
+          content: '<p>アメリカでの生活を通じて感じた文化の違いについて、具体的な体験談を交えてお話しします。</p>',
+          categories: [{ title: 'アメリカ・スペイン活動記', slug: { current: 'america-spain-activity' } }],
+          tags: [
+            { title: '第3話', slug: { current: 'episode-3' } },
+            { title: '文化', slug: { current: 'culture' } }
+          ],
+          publishedAt: '2025-07-03',
+          author: { name: 'FOMUS まっすー' }
+        }
+      ]
+    }
+    
+    // エピソード番号でソート
+    return posts.sort((a, b) => {
+      const getEpisodeNumber = (title: string) => {
+        const match = title.match(/第(\d+)話/)
+        return match ? parseInt(match[1]) : 0
+      }
+      return getEpisodeNumber(a.title) - getEpisodeNumber(b.title)
+    })
+  } catch (error) {
+    console.error('アメリカ・スペイン活動記取得エラー:', error)
+    return []
+  }
+}
+
 // 記事検索
 export async function searchNotionPosts(query: string): Promise<NotionPost[]> {
   try {

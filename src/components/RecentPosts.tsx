@@ -43,17 +43,20 @@ export default async function RecentPosts({ posts = [] }: RecentPostsProps) {
     console.log('Notion記事の取得に失敗しました:', error)
   }
 
-  // Notion記事をPost形式に変換
+  // Notion記事をPost形式に変換（カテゴリーページへのリンクとして表示）
   const convertedNotionPost = notionPost ? {
-    _id: notionPost.id,
-    title: notionPost.title,
-    slug: { current: 'america-spain-activity' },
-    excerpt: notionPost.content?.substring(0, 160) + '...' || 'アメリカとスペインでの活動について',
+    _id: 'america-spain-category',
+    title: 'アメリカ・スペイン活動記🇺🇸🇪🇸',
+    slug: { current: 'category/america-spain-activity' }, // カテゴリーページへのリンク
+    excerpt: 'アメリカとスペインでの活動を記録したシリーズです。各話ごとに体験談や学びを詳しく紹介しています。',
     featuredImage: notionPost.coverImage ? {
       asset: { url: notionPost.coverImage },
       alt: notionPost.title
-    } : undefined,
-    categories: [{ title: '活動記録', slug: { current: 'activity' } }],
+    } : {
+      asset: { url: '/placeholder-america-spain.jpg' },
+      alt: 'アメリカ・スペイン活動記'
+    },
+    categories: [{ title: 'シリーズ記事', slug: { current: 'series' } }],
     publishedAt: notionPost.publishedAt || '2025-07-03',
     author: { name: 'FOMUS まっすー' }
   } : null
