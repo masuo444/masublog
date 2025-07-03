@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { getAllPosts, getAllCategories, getAllTags } from '@/lib/queries'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://fomus-masuo.com'
+  const baseUrl = 'https://masublog.vercel.app'
   
   let posts = []
   let categories = []
