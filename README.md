@@ -104,6 +104,12 @@ npm run start
 
 ### Vercelへのデプロイ
 
+#### ワンクリックデプロイ
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/masuo444/masublog.git)
+
+#### 手動デプロイ
+
 1. GitHubリポジトリをVercelに接続
 2. 環境変数を設定
 3. 自動デプロイが開始されます
