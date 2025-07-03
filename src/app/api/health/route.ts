@@ -38,9 +38,9 @@ export async function GET(request: NextRequest) {
       
       // 詳細情報（秘密キーがある場合のみ）
       if (secret === process.env.REVALIDATE_SECRET) {
-        healthData.performance = {
-          ...healthData.performance,
-          notionPostsCount: allPosts.length,
+        // @ts-expect-error - 動的プロパティ追加
+        healthData.notionDetails = {
+          postsCount: allPosts.length,
           hasSpecificPost: !!specificPost,
           lastFetchTime: new Date().toISOString()
         }
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
       action,
       success: false,
-      details: {} as Record<string, any>
+      details: {} as Record<string, unknown>
     }
 
     switch (action) {
@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
       case 'full-recovery':
         try {
           // 完全復旧処理
-          const [notionData] = await Promise.all([
+          await Promise.all([
             getAllNotionPosts(),
             // その他の復旧処理
           ])

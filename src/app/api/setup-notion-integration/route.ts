@@ -119,12 +119,14 @@ export async function POST(request: NextRequest) {
           getSpecificNotionPost()
         ])
         
+        // @ts-expect-error - 動的プロパティ追加
         setupResults.contentTest = {
           allPostsCount: allPosts.length,
           hasSpecificPost: !!specificPost,
           success: true
         }
       } catch (error) {
+        // @ts-expect-error - 動的プロパティ追加
         setupResults.contentTest = {
           error: error instanceof Error ? error.message : 'Unknown error',
           success: false
