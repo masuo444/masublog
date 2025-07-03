@@ -3,11 +3,11 @@ import Link from 'next/link'
 import { ArrowRight, Calendar, MapPin, Globe } from 'lucide-react'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
-import { getAmericaSpainActivityPosts } from '@/lib/notion'
+import { getAmericaSpainActivityPosts, NotionPost } from '@/lib/notion'
 
 export default async function ActivitySection() {
   // アメリカ・スペイン活動記の最新エピソードを取得
-  let episodes = []
+  let episodes: NotionPost[] = []
   try {
     const allEpisodes = await getAmericaSpainActivityPosts()
     episodes = allEpisodes.slice(0, 3) // 最新3話を表示

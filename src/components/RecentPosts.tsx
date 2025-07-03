@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { ArrowRight, Calendar, User } from 'lucide-react'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
-import { getSpecificNotionPost } from '@/lib/notion'
 
 interface Post {
   _id: string

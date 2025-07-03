@@ -6,7 +6,7 @@ import { Calendar, Clock, ArrowLeft, Share, Tag } from 'lucide-react'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
 import { getPostBySlug } from '@/lib/queries'
-import { getSpecificNotionPost, getNotionPageById, getAmericaSpainActivityPosts } from '@/lib/notion'
+import { getSpecificNotionPost, getAmericaSpainActivityPosts } from '@/lib/notion'
 import { BlogPostJsonLd } from '@/components/JsonLd'
 
 // ISR設定: 30秒間キャッシュし、バックグラウンドで更新

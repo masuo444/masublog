@@ -6,6 +6,7 @@ import { Calendar, User, ArrowRight, ArrowLeft } from 'lucide-react'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
 import { getPostsByCategory, getAllCategories } from '@/lib/queries'
+import { getAmericaSpainActivityPosts } from '@/lib/notion'
 import { Post } from '@/types/blog'
 
 interface CategoryPageProps {
@@ -20,7 +21,8 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
     business: 'ビジネス',
     technology: 'テクノロジー',
     creativity: 'クリエイティブ',
-    lifestyle: 'ライフスタイル'
+    lifestyle: 'ライフスタイル',
+    'america-spain-activity': 'アメリカ・スペイン活動記'
   }
 
   const categoryName = categoryNames[category] || category
@@ -37,10 +39,17 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   let categories = []
 
   try {
-    [posts, categories] = await Promise.all([
-      getPostsByCategory(categorySlug),
-      getAllCategories()
-    ])
+    if (categorySlug === 'america-spain-activity') {
+      [posts, categories] = await Promise.all([
+        getAmericaSpainActivityPosts(),
+        getAllCategories()
+      ])
+    } else {
+      [posts, categories] = await Promise.all([
+        getPostsByCategory(categorySlug),
+        getAllCategories()
+      ])
+    }
   } catch {
     console.log('Sanity not configured yet, using dummy data')
   }
@@ -171,7 +180,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     business: 'ビジネス',
     technology: 'テクノロジー',
     creativity: 'クリエイティブ',
-    lifestyle: 'ライフスタイル'
+    lifestyle: 'ライフスタイル',
+    'america-spain-activity': 'アメリカ・スペイン活動記'
   }
 
   if (!posts.length) {
@@ -189,23 +199,51 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <Link
-            href="/blog"
-            className="inline-flex items-center text-blue-600 hover:text-blue-700 transition-colors mb-6"
-          >
-            <ArrowLeft size={20} className="mr-2" />
-            ブログ一覧に戻る
-          </Link>
+    <div className="bg-white min-h-screen">
+      {/* ヘッダー部分 - アメリカ・スペイン活動記の場合は特別なデザイン */}
+      <div className={`relative py-20 ${
+        categorySlug === 'america-spain-activity' 
+          ? 'bg-gradient-to-r from-blue-500 via-purple-500 to-orange-500'
+          : 'bg-white border-b'
+      }`}>
+        {categorySlug === 'america-spain-activity' && (
+          <div className="absolute inset-0 bg-black/20"></div>
+        )}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <Link
+              href="/blog"
+              className={`inline-flex items-center transition-colors ${
+                categorySlug === 'america-spain-activity'
+                  ? 'text-white/90 hover:text-white'
+                  : 'text-blue-600 hover:text-blue-700'
+              }`}
+            >
+              <ArrowLeft size={20} className="mr-2" />
+              ブログ一覧に戻る
+            </Link>
+          </div>
           
-          <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <div className={`text-center ${categorySlug === 'america-spain-activity' ? 'text-white' : ''}`}>
+            {categorySlug === 'america-spain-activity' && (
+              <div className="text-6xl mb-6">🌍</div>
+            )}
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
               {currentCategory}
+              {categorySlug === 'america-spain-activity' && (
+                <div className="flex justify-center gap-4 mt-4">
+                  <span className="text-5xl">🇺🇸</span>
+                  <span className="text-5xl">🇪🇸</span>
+                </div>
+              )}
             </h1>
-            <p className="text-xl text-gray-600">
-              {currentCategory}に関する記事一覧（{posts.length}件）
+            <p className={`text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed ${
+              categorySlug === 'america-spain-activity' ? 'text-white/90' : 'text-gray-600'
+            }`}>
+              {categorySlug === 'america-spain-activity' 
+                ? 'アメリカとスペインでの活動を記録したシリーズです。各話ごとに体験談や学びを詳しく紹介しています。'
+                : `${currentCategory}に関する記事一覧（${posts.length}件）`
+              }
             </p>
           </div>
         </div>
