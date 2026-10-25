@@ -28,8 +28,8 @@ export async function POST(request: NextRequest) {
       revalidatePath('/', 'layout'),
       revalidatePath('/blog', 'page'),
       revalidatePath('/blog/[slug]', 'page'),
-      revalidateTag('notion-posts'),
-      revalidateTag('recent-posts')
+      revalidateTag('notion-posts', { expire: 0 }),
+      revalidateTag('recent-posts', { expire: 0 })
     ])
     
     return NextResponse.json({
@@ -72,8 +72,8 @@ export async function GET(request: NextRequest) {
     
     // 軽量な再生成
     await Promise.all([
-      revalidateTag('notion-posts'),
-      revalidateTag('recent-posts')
+      revalidateTag('notion-posts', { expire: 0 }),
+      revalidateTag('recent-posts', { expire: 0 })
     ])
     
     return NextResponse.json({

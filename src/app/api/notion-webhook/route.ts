@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
         revalidatePath('/'),
         revalidatePath('/blog'),
         revalidatePath('/blog/[slug]', 'page'),
-        revalidateTag('notion-posts')
+        revalidateTag('notion-posts', { expire: 0 })
       ])
       
       console.log('Pages revalidated successfully')
@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
     await Promise.all([
       revalidatePath('/'),
       revalidatePath('/blog'),
-      revalidateTag('notion-posts')
+      revalidateTag('notion-posts', { expire: 0 })
     ])
     
     return NextResponse.json({ 
